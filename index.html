@@ -81,20 +81,14 @@ input[type=checkbox],input[type=radio]{accent-color:var(--emerald);width:18px;he
 .radios{display:flex;gap:25px;margin:15px 0}
 .form-actions{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
 .cancel{background:transparent;color:var(--green)}
-@media(max-width:750px){
- .header-inner{flex-direction:column;gap:14px}
- nav{width:100%;justify-content:center;flex-wrap:wrap;gap:12px}
- nav a{font-size:12px}
- .hero{padding:55px 0}
- .hero-grid{grid-template-columns:1fr}
- .logo-panel{max-width:280px;width:100%;margin:auto}
- h1{letter-spacing:-3px}
- .grid,.team,.fields,.checks{grid-template-columns:1fr}
- section{padding:50px 0}
- .dialog-header h2{font-size:21px}
- form{padding:14px}
-}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.welcome{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(4,39,28,.72);backdrop-filter:blur(4px);padding:20px}
+.welcome.open{display:grid}
+.welcome-card{width:min(460px,92%);background:var(--ivory);border:1px solid var(--gold);border-radius:18px;padding:34px 30px;text-align:center;color:var(--green)}
+.welcome-mark{width:54px;height:54px;border-radius:50%;background:var(--green);display:grid;place-items:center;margin:0 auto 16px;font-weight:bold;color:var(--lightgold);font-size:20px}
+.welcome-card h2{font-size:24px;margin:0 0 10px;letter-spacing:-1px}
+.welcome-card p{font-size:14px;color:var(--muted);margin:0 0 14px}
+.welcome-card strong{color:var(--green)}
+.welcome .button{width:100%}
 </style>
 </head>
 <body>
@@ -309,7 +303,23 @@ input[type=checkbox],input[type=radio]{accent-color:var(--emerald);width:18px;he
   </form>
 </dialog>
 
+<div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+  <div class="welcome-card">
+    <div class="welcome-mark" aria-hidden="true">✓</div>
+    <h2 id="welcome-title">Application received</h2>
+    <p id="welcome-message"></p>
+    <p class="note" style="margin:0 0 20px">Your email draft has opened. Remember to attach your passport photo, then send it so the team can collect your application.</p>
+    <button class="button" id="welcome-close" type="button">Back to Home</button>
+  </div>
+</div>
+
 <script>
+// Google Form link goes here once it is created, e.g.
+// const FORM_URL = "https://docs.google.com/forms/d/e/......./viewform";
+// Until it is set, "Start Application" opens the on-page form below.
+const FORM_URL = "";
+const CLUB_EMAIL = "medicaviridissbmch@gmail.com";
+
 const dialog = document.getElementById("application");
 const form = document.getElementById("membership-form");
 const photo = document.getElementById("photo");
@@ -318,6 +328,8 @@ const photoError = document.getElementById("photo-error");
 const email = document.getElementById("email");
 const emailError = document.getElementById("email-error");
 const otherText = document.getElementById("other-text");
+const welcome = document.getElementById("welcome");
+const welcomeMessage = document.getElementById("welcome-message");
 let photoValid = false;
 let previewUrl = "";
 let photoCheckVersion = 0;
@@ -327,10 +339,31 @@ document.getElementById("dob").max =
   `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
 
 document.querySelectorAll("[data-open]").forEach(button => {
-  button.addEventListener("click", () => dialog.showModal());
+  button.addEventListener("click", () => {
+    if (FORM_URL) window.open(FORM_URL, "_blank");
+    else dialog.showModal();
+  });
 });
 document.getElementById("close-dialog").onclick = () => dialog.close();
 document.getElementById("cancel").onclick = () => dialog.close();
+
+const welcomeClose = document.getElementById("welcome-close");
+welcomeClose.addEventListener("click", () => welcome.classList.remove("open"));
+welcome.addEventListener("click", event => {
+  if (event.target === welcome) welcome.classList.remove("open");
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && welcome.classList.contains("open")) welcome.classList.remove("open");
+});
+
+function showWelcome(name) {
+  const greeting = name ? `<strong>${name}</strong>` : "Hello, Medica Viridis candidate";
+  welcomeMessage.innerHTML =
+    `Thank you, ${greeting}! Your application for the Medica Viridis Eco Club has been noted. ` +
+    `The club team will review it and reach out on the phone number and email you shared.`;
+  welcome.classList.add("open");
+  welcomeClose.focus();
+}
 
 const areas = [
   "Public Speaking", "Event Organization", "Photography / Videography",
@@ -474,9 +507,12 @@ form.addEventListener("submit", event => {
   ].join("\n");
 
   location.href =
-    "mailto:medicaviridissbmch@gmail.com?subject=" +
-    encodeURIComponent("Junior Membership Enquiry – 2026") +
+    "mailto:" + CLUB_EMAIL +
+    "?subject=" + encodeURIComponent("Junior Membership Enquiry – 2026") +
     "&body=" + encodeURIComponent(body);
+
+  dialog.close();
+  showWelcome(value("fullName"));
 });
 </script>
 </body>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Medica Viridis</title>
+<style>
+:root{
+  --green:#073b2a;--deep:#04271c;--emerald:#126b45;
+  --gold:#c9a04b;--lightgold:#e2c16f;--ivory:#fbf7e9;
+  --muted:#5e6f5f;--line:#d8c495;--error:#a13228
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ivory);color:var(--green);font-family:Arial,sans-serif}
+a{color:inherit}
+button,input,textarea{font:inherit}
+button,a,input,textarea{outline-offset:4px}
+:focus-visible{outline:3px solid var(--gold)}
+.container{width:min(1120px,92%);margin:auto}
+header{position:sticky;top:0;z-index:10;background:var(--deep);border-bottom:1px solid var(--gold)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 0}
+.brand{font-weight:900;letter-spacing:2px;color:var(--lightgold);text-decoration:none}
+nav{display:flex;gap:20px}
+nav a{font-size:13px;color:var(--ivory);text-decoration:none}
+nav a:hover{color:var(--lightgold)}
+.hero{background:radial-gradient(circle at 90% 20%,#c9a04b30,transparent 35%),linear-gradient(120deg,var(--deep),var(--emerald));color:var(--ivory);padding:90px 0}
+.hero-grid{display:grid;grid-template-columns:1.4fr 1fr;align-items:center;gap:55px}
+.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:bold;color:var(--gold)}
+h1{font-size:clamp(54px,8vw,100px);line-height:.92;letter-spacing:-5px;margin:24px 0}
+.tagline{font-size:24px;color:var(--lightgold);font-weight:bold}
+p{line-height:1.75}
+.hero p{color:#eee9d8}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
+.button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 22px;border-radius:10px;border:1px solid var(--gold);background:var(--gold);color:var(--deep);font-weight:bold;cursor:pointer;text-decoration:none}
+.button:hover{background:var(--lightgold)}
+.outline{background:transparent;color:var(--ivory)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.chip{border:1px solid #c9a04b70;padding:10px 13px;border-radius:9px;font-size:13px}
+.logo-panel{background:var(--ivory);border:3px solid var(--gold);border-radius:50%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;padding:25px;text-align:center;color:var(--green)}
+.logo-panel img{width:100%;height:100%;object-fit:contain;border-radius:50%}
+.logo-fallback{font-size:22px;font-weight:bold;line-height:1.5}
+section{padding:75px 0;scroll-margin-top:90px}
+h2{font-size:clamp(32px,5vw,52px);letter-spacing:-2px;margin:12px 0 25px}
+h3{font-size:23px;margin:18px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.card{padding:27px;border:1px solid var(--line);border-radius:16px;background:#fffdf6}
+.badge{display:inline-block;background:#eee1bd;border-radius:20px;padding:8px 12px;font-size:12px;font-weight:bold}
+.muted{color:var(--muted)}
+.event-logo{height:160px;width:100%;object-fit:contain;margin-top:20px}
+.team{grid-template-columns:repeat(3,1fr)}
+.initials{width:56px;height:56px;border-radius:50%;background:#ede0b9;border:1px solid var(--gold);display:grid;place-items:center;font-weight:bold}
+.team h3{font-size:19px}
+.team p{font-size:14px}
+.join{background:var(--green);color:var(--ivory)}
+.join p{max-width:740px}
+.join a{overflow-wrap:anywhere}
+footer{background:var(--deep);color:var(--ivory);padding:25px 0;text-align:center;font-size:13px}
+.footer-logo{width:55px;height:55px;object-fit:contain;background:var(--ivory);border-radius:10px;padding:3px;margin:0 auto 12px}
+.empty-gallery{padding:40px;border:1px dashed var(--gold);border-radius:16px;text-align:center;background:#f3ebd6}
+dialog{width:min(850px,94%);max-height:90vh;padding:0;border:1px solid var(--gold);border-radius:18px;background:var(--ivory);color:var(--green)}
+dialog::backdrop{background:#04271cbf;backdrop-filter:blur(4px)}
+.dialog-header{position:sticky;top:0;background:#f0e5c8;padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.dialog-header h2{font-size:26px;margin:0;letter-spacing:-1px}
+.close{border:0;background:var(--green);color:var(--lightgold);border-radius:8px;width:38px;height:38px;cursor:pointer}
+form{padding:22px}
+fieldset{border:1px solid var(--line);border-radius:12px;padding:20px;margin:0 0 22px}
+legend{font-weight:bold;padding:0 8px;line-height:1.5}
+label.field{display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:bold}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+input:not([type=checkbox]):not([type=radio]),textarea{width:100%;padding:12px;border:1px solid #9bac98;background:#fffdf6;border-radius:8px;color:var(--green)}
+textarea{min-height:95px;resize:vertical}
+.stacked{display:grid;gap:20px}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.checks label,.radios label{display:flex;align-items:center;gap:9px;font-size:14px;line-height:1.4}
+input[type=checkbox],input[type=radio]{accent-color:var(--emerald);width:18px;height:18px}
+.required,.error{color:var(--error)}
+.error{font-size:13px;margin:8px 0;min-height:0}
+.note{font-size:13px;color:var(--muted)}
+.photo-preview{display:none;width:100px;height:125px;object-fit:cover;border:1px solid var(--gold);border-radius:8px;margin-top:12px}
+.radios{display:flex;gap:25px;margin:15px 0}
+.form-actions{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.cancel{background:transparent;color:var(--green)}
+@media(max-width:750px){
+ .header-inner{flex-direction:column;gap:14px}
+ nav{width:100%;justify-content:center;flex-wrap:wrap;gap:12px}
+ nav a{font-size:12px}
+ .hero{padding:55px 0}
+ .hero-grid{grid-template-columns:1fr}
+ .logo-panel{max-width:280px;width:100%;margin:auto}
+ h1{letter-spacing:-3px}
+ .grid,.team,.fields,.checks{grid-template-columns:1fr}
+ section{padding:50px 0}
+ .dialog-header h2{font-size:21px}
+ form{padding:14px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="#home">MEDICA VIRIDIS</a>
+    <nav aria-label="Main navigation">
+      <a href="#home">Home + About</a>
+      <a href="#events">Events + Schedule</a>
+      <a href="#members">Members + Team</a>
+      <a href="#join">Join + Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Environmental club · SBMCH</span>
+      <h1>MEDICA<br>VIRIDIS</h1>
+      <div class="tagline">Future doctors for a greener campus.</div>
+      <p>Medica Viridis brings MBBS students together to explore how the environment shapes health, starting on our own campus. Members plant and care for greenery, explore environmental questions through research, and share what they learn through presentations and awareness campaigns. There’s a place for students who enjoy gardening, writing, photography, or organising events.</p>
+      <div class="actions">
+        <button class="button" data-open>Start Application</button>
+        <a class="button outline" href="#events">Explore Events</a>
+      </div>
+      <div class="chips">
+        <span class="chip">Gardening</span>
+        <span class="chip">Research</span>
+        <span class="chip">Documentation</span>
+        <span class="chip">Awareness</span>
+      </div>
+    </div>
+    <div class="logo-panel">
+      <img src="club-logo.png" alt="Medica Viridis club logo"
+        onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+      <div class="logo-fallback" hidden>MEDICA VIRIDIS<br>Service · Healing<br>Compassion</div>
+    </div>
+  </div>
+</section>
+
+<section id="accomplished">
+  <div class="container">
+    <span class="eyebrow">Our campus journey</span>
+    <h2>Accomplished Events</h2>
+    <div id="completed-gallery" class="empty-gallery">
+      <p><strong>Event highlights will appear here.</strong></p>
+      <p class="muted">Photos, videos, and completed-event updates will be added by the club team.</p>
+    </div>
+  </div>
+</section>
+
+<section id="events" style="background:#f4ebd4">
+  <div class="container">
+    <span class="eyebrow">Events + Schedule</span>
+    <h2>Ideas taking root.</h2>
+    <div class="grid">
+      <article class="card">
+        <span class="badge">Proposed event</span>
+        <img class="event-logo" src="green-pulse-logo.png"
+          alt="Green Pulse Conference event logo"
+          onerror="this.hidden=true">
+        <h3>GREEN PULSE 2026</h3>
+        <p class="muted">A proposed Medica Viridis event focused on environmental awareness and student participation.</p>
+        <p><strong>Date and programme to be announced.</strong></p>
+      </article>
+      <article class="card">
+        <span class="badge">In planning</span>
+        <h3>Campus Awareness Rally</h3>
+        <p class="muted">A proposed rally within the college campus where students can raise awareness about environmental issues.</p>
+        <p><strong>In planning · Date to be announced.</strong></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="members">
+  <div class="container">
+    <span class="eyebrow">Members + Team</span>
+    <h2>Medica Viridis Core Committee</h2>
+    <div class="grid team">
+      <article class="card"><div class="initials">SE</div><h3>Ms. Sri Ritthvika E.</h3><p class="muted">Executive Advisor &amp; Outreach Coordinator</p></article>
+      <article class="card"><div class="initials">JA</div><h3>Mr. J. Infant Arockia Ajoe</h3><p class="muted">President</p></article>
+      <article class="card"><div class="initials">NR</div><h3>Mr. Nitheshwar R.</h3><p class="muted">Vice President</p></article>
+      <article class="card"><div class="initials">TB</div><h3>Tathagat Kingshuk Bhutia</h3><p class="muted">Secretary</p></article>
+      <article class="card"><div class="initials">AD</div><h3>Arpita Das</h3><p class="muted">Joint Secretary</p></article>
+      <article class="card"><div class="initials">HK</div><h3>Haresh Kumar R.</h3><p class="muted">Treasurer</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="join" id="join">
+  <div class="container">
+    <span class="eyebrow">Join + Contact</span>
+    <h2>Join Medica Viridis</h2>
+    <p>Are you part of the 2026 MBBS junior batch at Sree Balaji Medical College and Hospital? Join us in gardening, environmental research, documentation, social media, or awareness campaigns. Complete the membership application to contact the club team.</p>
+    <div class="actions">
+      <button class="button" data-open>Start Application</button>
+      <a class="button outline" href="mailto:medicaviridissbmch@gmail.com">medicaviridissbmch@gmail.com</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <img class="footer-logo" src="college-logo.png"
+      alt="Sree Balaji Medical College and Hospital logo"
+      onerror="this.hidden=true">
+    <p>Club administration contact: medicaviridissbmch@gmail.com</p>
+    <p>Medica Viridis · Sree Balaji Medical College and Hospital, Chennai</p>
+  </div>
+</footer>
+
+<dialog id="application">
+  <div class="dialog-header">
+    <h2>Application for Membership</h2>
+    <button class="close" id="close-dialog" type="button" aria-label="Close application">✕</button>
+  </div>
+
+  <form id="membership-form" novalidate>
+    <p class="note">Required fields are marked *. Your application opens as an email draft; it is not submitted automatically.</p>
+
+    <fieldset>
+      <legend>Personal details</legend>
+      <div class="fields">
+        <label class="field">Name in Full <span class="required">*</span>
+          <input name="fullName" autocomplete="name" required pattern=".*\S.*">
+        </label>
+        <label class="field">Student ID <span class="required">*</span>
+          <input name="studentId" required pattern=".*\S.*">
+        </label>
+        <label class="field">Course &amp; Year <span class="required">*</span>
+          <input name="courseYear" required pattern=".*\S.*">
+        </label>
+        <label class="field">Phone Number <span class="required">*</span>
+          <input name="phone" type="tel" autocomplete="tel" required pattern=".*\S.*">
+        </label>
+        <label class="field">Email ID <span class="required">*</span>
+          <input id="email" name="email" type="email" autocomplete="email"
+            required aria-describedby="email-error">
+          <span id="email-error" class="error" aria-live="polite"></span>
+        </label>
+        <label class="field">Date of Birth <span class="required">*</span>
+          <input id="dob" name="dob" type="date" autocomplete="bday" required>
+        </label>
+      </div>
+      <div style="margin-top:20px">
+        <label class="field">Passport Face Photo <span class="required">*</span>
+          <input id="photo" type="file" accept=".jpg,.jpeg,image/jpeg"
+            required aria-describedby="photo-note photo-error">
+        </label>
+        <p id="photo-note" class="note">JPG/JPEG only. Select a clear passport-style face photo. You must manually attach this file when sending your email.</p>
+        <p id="photo-error" class="error" aria-live="polite"></p>
+        <img id="photo-preview" class="photo-preview" alt="Selected passport photo preview">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Motivation &amp; concern</legend>
+      <div class="stacked">
+        <label class="field">Why do you want to join Medica Viridis Eco Club? Give only two reasons.
+          <textarea name="reasons"></textarea>
+        </label>
+        <label class="field">What do you think is the most important environmental concern for you?
+          <textarea name="concern"></textarea>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset id="contribution-section">
+      <legend>Tick the area(s) in which you can contribute to the club. <span class="required">*</span></legend>
+      <p class="note">Select at least one option. You can choose more than one.</p>
+      <div class="checks" id="contribution-options"></div>
+      <label class="field" style="margin-top:15px">Other contribution
+        <input id="other-text" name="otherText" disabled>
+      </label>
+      <p class="error" id="contribution-error" aria-live="polite"></p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Experience &amp; leadership</legend>
+      <div class="stacked">
+        <label class="field">Have you participated in any environmental activities before? If yes, mention them.
+          <textarea name="experience"></textarea>
+        </label>
+        <label class="field">Have you held any leadership position in school/college clubs or organizations?
+          <textarea name="leadership"></textarea>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Are you willing to participate in activities conducted beyond college hours and on holidays if required? <span class="required">*</span></legend>
+      <div class="radios">
+        <label><input type="radio" name="availability" value="Yes" required> Yes</label>
+        <label><input type="radio" name="availability" value="No" required> No</label>
+      </div>
+    </fieldset>
+
+    <label class="field">Suggestions / Ideas for the Eco Club
+      <textarea name="suggestions"></textarea>
+    </label>
+    <p class="note">Email format is checked automatically. This does not verify ownership of the address.</p>
+
+    <div class="form-actions">
+      <button class="button cancel" id="cancel" type="button">Cancel</button>
+      <button class="button" type="submit">Send Membership Enquiry</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+const dialog = document.getElementById("application");
+const form = document.getElementById("membership-form");
+const photo = document.getElementById("photo");
+const preview = document.getElementById("photo-preview");
+const photoError = document.getElementById("photo-error");
+const email = document.getElementById("email");
+const emailError = document.getElementById("email-error");
+const otherText = document.getElementById("other-text");
+let photoValid = false;
+let previewUrl = "";
+let photoCheckVersion = 0;
+
+const today = new Date();
+document.getElementById("dob").max =
+  `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+
+document.querySelectorAll("[data-open]").forEach(button => {
+  button.addEventListener("click", () => dialog.showModal());
+});
+document.getElementById("close-dialog").onclick = () => dialog.close();
+document.getElementById("cancel").onclick = () => dialog.close();
+
+const areas = [
+  "Public Speaking", "Event Organization", "Photography / Videography",
+  "Social Media Management", "Graphic Designing", "Content Writing",
+  "Sponsorship & Fundraising", "Tree Plantation Activities",
+  "Waste Management & Recycling", "Awareness Campaigns", "Gardening",
+  "Research & Documentation", "Leadership & Coordination",
+  "Community Service", "Other"
+];
+const options = document.getElementById("contribution-options");
+areas.forEach(area => {
+  const label = document.createElement("label");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.name = "contribution";
+  checkbox.value = area;
+  label.append(checkbox, document.createTextNode(area));
+  options.append(label);
+});
+
+options.addEventListener("change", () => {
+  document.getElementById("contribution-error").textContent = "";
+  const selectedOther =
+    [...form.querySelectorAll('[name="contribution"]:checked')]
+    .some(input => input.value === "Other");
+  otherText.disabled = !selectedOther;
+  otherText.required = selectedOther;
+  otherText.pattern = ".*\\S.*";
+});
+
+function checkEmail() {
+  const message = email.validity.valueMissing
+    ? "Please enter your email address."
+    : email.validity.typeMismatch
+      ? "Please enter a valid email address."
+      : "";
+  emailError.textContent = message;
+  email.setAttribute("aria-invalid", String(Boolean(message)));
+}
+email.addEventListener("input", checkEmail);
+email.addEventListener("blur", checkEmail);
+
+photo.addEventListener("change", async () => {
+  const version = ++photoCheckVersion;
+  photoValid = false;
+  photoError.textContent = "";
+  photo.setCustomValidity("");
+  preview.style.display = "none";
+  if (previewUrl) URL.revokeObjectURL(previewUrl);
+  previewUrl = "";
+  const file = photo.files[0];
+  if (!file) return;
+
+  photo.setCustomValidity("Please wait while the JPG photo is checked.");
+  try {
+    const bytes = new Uint8Array(await file.slice(0, 3).arrayBuffer());
+    if (version !== photoCheckVersion) return;
+    const validExtension = /\.(jpg|jpeg)$/i.test(file.name);
+    const validHeader = bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255;
+    if (!validExtension || !validHeader) {
+      throw new Error("Please select a JPG/JPEG image only.");
+    }
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = () => reject(new Error("This JPG image could not be read."));
+      image.src = url;
+    }).catch(error => {
+      URL.revokeObjectURL(url);
+      throw error;
+    });
+    if (version !== photoCheckVersion) {
+      URL.revokeObjectURL(url);
+      return;
+    }
+    previewUrl = url;
+    preview.src = url;
+    preview.style.display = "block";
+    photoValid = true;
+    photo.setCustomValidity("");
+  } catch (error) {
+    if (version !== photoCheckVersion) return;
+    photoError.textContent = error.message;
+    photo.setCustomValidity(error.message);
+  }
+});
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  checkEmail();
+  if (!form.reportValidity()) return;
+  if (!photoValid) {
+    photoError.textContent = "Please select a valid JPG passport photo.";
+    photo.focus();
+    return;
+  }
+  const selected = [...form.querySelectorAll('[name="contribution"]:checked')];
+  if (!selected.length) {
+    document.getElementById("contribution-error").textContent =
+      "Please select at least one contribution area.";
+    options.querySelector("input").focus();
+    return;
+  }
+
+  const data = new FormData(form);
+  const value = name => String(data.get(name) || "").trim() || "Not specified";
+  const contributions = selected.map(input =>
+    input.value === "Other" ? `Other: ${value("otherText")}` : input.value
+  ).join(", ");
+
+  const body = [
+    "MEDICA VIRIDIS — APPLICATION FOR MEMBERSHIP",
+    "",
+    `Name in Full: ${value("fullName")}`,
+    `Student ID: ${value("studentId")}`,
+    `Course & Year: ${value("courseYear")}`,
+    `Phone Number: ${value("phone")}`,
+    `Email ID: ${value("email")}`,
+    `Date of Birth: ${value("dob")}`,
+    `Passport Photo: ${photo.files[0].name} — please attach manually`,
+    "",
+    "Why do you want to join? Give only two reasons:",
+    value("reasons"),
+    "",
+    "Most important environmental concern:",
+    value("concern"),
+    "",
+    `Contribution areas: ${contributions}`,
+    "",
+    "Previous environmental activities:",
+    value("experience"),
+    "",
+    "Previous leadership positions:",
+    value("leadership"),
+    "",
+    `Available beyond college hours and on holidays: ${value("availability")}`,
+    "",
+    "Suggestions / Ideas:",
+    value("suggestions")
+  ].join("\n");
+
+  location.href =
+    "mailto:medicaviridissbmch@gmail.com?subject=" +
+    encodeURIComponent("Junior Membership Enquiry – 2026") +
+    "&body=" + encodeURIComponent(body);
+});
+</script>
+</body>
+</html>
